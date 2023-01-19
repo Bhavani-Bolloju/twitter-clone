@@ -12,6 +12,5 @@ export const getUserByUserId = async function (userId) {
 export const getPosts = async function (following) {
   const q = query(collection(db, "posts"), where("userId", "in", following));
   const docs = await getDocs(q);
-  const allPosts = docs.docs.map((doc) => doc.data());
-  return allPosts;
+  return docs.docs.map((doc) => ({ ...doc.data(), docId: doc.id }));
 };

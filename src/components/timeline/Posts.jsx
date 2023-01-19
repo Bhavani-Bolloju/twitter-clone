@@ -1,18 +1,17 @@
 import React from "react";
 import Post from "./Post";
 
-function Posts(props) {
+function Posts({ post }) {
   return (
     <div>
-      {props.posts.map((post) => (
-        <Post
-          key={post.post_id}
-          fullname={props.fullname}
-          username={props.username}
-          post={post}
-          imageSrc={props.imageSrc}
-        />
-      ))}
+      <Post
+        fullname={post.fullname}
+        username={post.username}
+        imageSrc={post.imageSrc}
+        caption={post.caption}
+        post_image={post.postImage}
+        id={post.docId}
+      />
     </div>
   );
 }

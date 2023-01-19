@@ -6,8 +6,7 @@ import {
 } from "react-icons/ai";
 import UserProfile from "./UserProfile";
 
-function Post({ fullname, username, post, imageSrc }) {
-  const { caption, post_image = "" } = post;
+function Post({ fullname, username, post, imageSrc, caption, post_image, id }) {
   return (
     <div className="flex flex-col gap-3 py-4 text-sm border border-gray-100 justify-center px-5">
       <UserProfile
@@ -21,7 +20,7 @@ function Post({ fullname, username, post, imageSrc }) {
           <img
             src={post_image}
             alt={username}
-            className="mt-3 h-[280px] rounded-2xl object-cover"
+            className="mt-3 w-[100%] h-[280px] rounded-2xl object-cover"
           />
         )}
       </main>
