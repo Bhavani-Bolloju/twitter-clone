@@ -8,3 +8,10 @@ export const getUserByUserId = async function (userId) {
   const userData = doc.docs[0].data();
   return userData;
 };
+
+export const getPosts = async function (following) {
+  const q = query(collection(db, "posts"), where("userId", "in", following));
+  const docs = await getDocs(q);
+  const allPosts = docs.docs.map((doc) => doc.data());
+  return allPosts;
+};
