@@ -30,6 +30,7 @@ function SuggestedProfiles() {
           toFollowList.map((profile) => (
             <SuggestedProfile
               key={profile?.docId}
+              spDocId={profile?.docId}
               spUsername={profile?.username}
               spFullname={profile?.fullname}
               userId={userDetails?.uid}

@@ -53,3 +53,49 @@ export const updateLoggedUserFollowingArray = async function (
         }
   );
 };
+
+export const updateProfileUserFollowersArray = async function (
+  isFollowing,
+  profileuserDocId,
+  userId
+) {
+  const data = doc(db, "users", profileuserDocId);
+
+  await updateDoc(
+    data,
+    isFollowing
+      ? { followers: arrayRemove(userId) }
+      : {
+          followers: arrayUnion(userId),
+        }
+  );
+};
+
+export const toggleFollower = async function (
+  isFollowing,
+  profileuserDocId,
+  userId,
+  userDocId,
+  profileUserId
+) {
+  await updateLoggedUserFollowingArray(isFollowing, userDocId, profileUserId);
+  await updateProfileUserFollowersArray(isFollowing, profileuserDocId, userId);
+};
+
+export const updatePostUserLikesArray = async function (
+  isLiked,
+  postUserDocId,
+  loggeduserId
+) {
+  const data = doc(db, "posts", postUserDocId);
+  await updateDoc(
+    data,
+    isLiked
+      ? {
+          likes: arrayRemove(loggeduserId),
+        }
+      : {
+          likes: arrayUnion(loggeduserId),
+        }
+  );
+};

@@ -2,6 +2,7 @@ import React from "react";
 import Post from "./Post";
 
 function Posts({ post }) {
+  console.log(post);
   return (
     <div>
       <Post
@@ -10,7 +11,9 @@ function Posts({ post }) {
         imageSrc={post.imageSrc}
         caption={post.caption}
         post_image={post.postImage}
-        id={post.docId}
+        docId={post.docId}
+        userId={post.userId}
+        allLikes={post.likes}
       />
     </div>
   );

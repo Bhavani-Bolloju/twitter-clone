@@ -1,11 +1,13 @@
 import React, { useContext, useState } from "react";
 import UserProfile from "../timeline/UserProfile";
-import { updateLoggedUserFollowingArray } from "../../firebase/services";
+
+import { toggleFollower } from "../../firebase/services";
 
 function SuggestedProfile({
   spUsername,
   spFullname,
   userId,
+  spDocId,
   spUserId,
   imageSrc,
   userDocId,
@@ -14,7 +16,7 @@ function SuggestedProfile({
   const [toFollow, setToFollow] = useState(false);
 
   const followUserHandler = function () {
-    updateLoggedUserFollowingArray(toFollow, userDocId, spUserId);
+    toggleFollower(toFollow, spDocId, userId, userDocId, spUserId);
     setToFollow((prev) => !prev);
   };
 
