@@ -8,7 +8,6 @@ function TimeLine({ userDetails }) {
   const { imageSrc, username, fullname, uid, following } = userDetails;
 
   const { posts } = usePosts(following);
-  console.log(posts);
 
   return (
     <div className="basis-1/2">
