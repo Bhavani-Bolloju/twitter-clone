@@ -7,7 +7,7 @@ function Home({ avatarUrl, username, fullname }) {
         <img
           src={avatarUrl}
           alt={username}
-          className="rounded-full w-12 h-12 object-cover"
+          className="rounded-full w-11 h-11 object-cover"
         />
       ) : (
         <div className="rounded-full self-start w-11 mx-2 h-11 flex items-center justify-center bg-blue-700 text-gray-100 text-xl">

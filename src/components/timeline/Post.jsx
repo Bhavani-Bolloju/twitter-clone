@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import {
-  AiFillHeart,
-  AiOutlineComment,
-  AiOutlineRetweet,
-} from "react-icons/ai";
+import React, { useEffect, useState } from "react";
+import { AiOutlineComment, AiOutlineRetweet } from "react-icons/ai";
 import { HiOutlineHeart } from "react-icons/hi";
+import { FaRegComment } from "react-icons/fa";
+
 import UserProfile from "./UserProfile";
 import useUser from "../hooks/use-user";
 import { updatePostUserLikesArray } from "../../firebase/services";
+import { postLikes } from "../../firebase/services";
+import PostReplies from "../comments/PostReplies";
 
 function Post({
   fullname,
@@ -22,18 +22,34 @@ function Post({
 }) {
   const { userDetails } = useUser();
 
-  const loggeduserLiked = allLikes.includes(userDetails?.uid);
+  const [liked, setLiked] = useState(false);
+  const [totalLikes, setTotalLikes] = useState(0);
+  const [commentText, setCommentText] = useState("");
+  const [overlay, setOverlay] = useState(false);
 
-  const [liked, setLiked] = useState(loggeduserLiked);
-  console.log(liked, loggeduserLiked);
+  useEffect(() => {
+    const getPostLikes = async function () {
+      const res = await postLikes(docId, userDetails?.uid);
+      setLiked(res.userLikes);
+      setTotalLikes(res.likes);
+    };
+
+    if (userDetails) {
+      getPostLikes();
+    }
+  }, [userDetails?.uid]);
 
   const userPostLikeHandler = function () {
     updatePostUserLikesArray(liked, docId, userDetails.uid);
     setLiked((prev) => !prev);
+
+    setTotalLikes((count) => {
+      return !liked ? (count += 1) : (count -= 1);
+    });
   };
-  // const userPostCommentHandler = function () {
-  //   console.log("comment");
-  // };
+  const userPostCommentHandler = function () {
+    setOverlay(true);
+  };
   // const userPostRetweetHandler = function () {
   //   console.log("retweet");
   // };
@@ -55,10 +71,10 @@ function Post({
           />
         )}
       </main>
-      <footer className="ml-[60px] flex gap-20 self-start">
-        <AiOutlineComment
-          // onClick={userPostCommentHandler}
-          className="w-5 h-5 text-gray-500 hover:cursor-pointer"
+      <footer className="ml-[60px] flex gap-20 self-start items-center">
+        <FaRegComment
+          onClick={userPostCommentHandler}
+          className="w-4 h-4 text-gray-500 hover:cursor-pointer"
         />
         <AiOutlineRetweet
           // onClick={userPostRetweetHandler}
@@ -71,9 +87,26 @@ function Post({
               liked ? "text-red-500 fill-red-500" : "text-gray-500"
             }`}
           />
-          <span>{allLikes && allLikes.length}</span>
+          <span className={`${liked ? "text-red-500" : "text-gray-500"}`}>
+            {allLikes && totalLikes}
+          </span>
         </div>
       </footer>
+      {overlay && (
+        <PostReplies
+          onClose={setOverlay}
+          postImage={post_image}
+          caption={caption}
+          spFullname={fullname}
+          spUsername={username}
+          spUserId={userId}
+          spDocId={docId}
+          imageSrc={userDetails?.imageSrc}
+          loggedUserId={userDetails?.uid}
+          loggedUserName={userDetails?.username}
+          loggedUserFullName={userDetails?.fullname}
+        />
+      )}
     </div>
   );
 }

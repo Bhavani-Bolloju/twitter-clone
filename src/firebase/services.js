@@ -99,3 +99,14 @@ export const updatePostUserLikesArray = async function (
         }
   );
 };
+
+export const postLikes = async function (docId, userId) {
+  const docRef = doc(db, "posts", docId);
+  const docSnap = await getDoc(docRef);
+  const user = docSnap.data();
+
+  return {
+    likes: user.likes.length,
+    userLikes: user.likes.includes(userId),
+  };
+};

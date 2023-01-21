@@ -2,7 +2,6 @@ import React from "react";
 import Post from "./Post";
 
 function Posts({ post }) {
-  console.log(post);
   return (
     <div>
       <Post
