@@ -11,10 +11,12 @@ function HomePage() {
   const { userDetails } = useUser();
 
   return (
-    <div className="flex px-10 py-2 max-w-screen-xl mx-auto">
+    <div className="relative grid grid-cols-home gap-4">
       <Sidebar />
-      {userDetails && <TimeLine userDetails={userDetails} />}
-      <SuggestedProfiles />
+      <div className="col-start-2 col-end-3 flex relative gap-5">
+        {userDetails && <TimeLine userDetails={userDetails} />}
+        <SuggestedProfiles />
+      </div>
     </div>
   );
 }

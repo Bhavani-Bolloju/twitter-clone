@@ -22,24 +22,26 @@ function SuggestedProfiles() {
   }, [userDetails]);
 
   return (
-    <div className="basis-2/6 p-3 bg-gray-100">
-      <h3 className="text-sm my-4 text-grey-600">suggestions for you</h3>
-      <ul className="list-none flex flex-col gap-3">
-        {toFollowList &&
-          userDetails &&
-          toFollowList.map((profile) => (
-            <SuggestedProfile
-              key={profile?.docId}
-              spDocId={profile?.docId}
-              spUsername={profile?.username}
-              spFullname={profile?.fullname}
-              userId={userDetails?.uid}
-              userDocId={userDetails.docId}
-              spUserId={profile?.uid}
-              imageSrc={profile?.imageSrc}
-            />
-          ))}
-      </ul>
+    <div className=" bg-gray-100 w-[300px]">
+      <div className="bg-slate-100 fixed w-[300px]">
+        <h3 className="text-sm my-4 text-grey-600">suggestions for you</h3>
+        <ul className="list-none flex flex-col gap-3">
+          {toFollowList &&
+            userDetails &&
+            toFollowList.map((profile) => (
+              <SuggestedProfile
+                key={profile?.docId}
+                spDocId={profile?.docId}
+                spUsername={profile?.username}
+                spFullname={profile?.fullname}
+                userId={userDetails?.uid}
+                userDocId={userDetails.docId}
+                spUserId={profile?.uid}
+                imageSrc={profile?.imageSrc}
+              />
+            ))}
+        </ul>
+      </div>
     </div>
   );
 }

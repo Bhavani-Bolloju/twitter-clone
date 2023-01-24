@@ -21,17 +21,17 @@ function Post({
   allLikes,
 }) {
   const { userDetails } = useUser();
-
   const [liked, setLiked] = useState(false);
   const [totalLikes, setTotalLikes] = useState(0);
-  const [commentText, setCommentText] = useState("");
   const [overlay, setOverlay] = useState(false);
+  const [comments, setComments] = useState(0);
 
   useEffect(() => {
     const getPostLikes = async function () {
       const res = await postLikes(docId, userDetails?.uid);
       setLiked(res.userLikes);
       setTotalLikes(res.likes);
+      setComments(res.comments);
     };
 
     if (userDetails) {
@@ -72,14 +72,14 @@ function Post({
         )}
       </main>
       <footer className="ml-[60px] flex gap-20 self-start items-center">
-        <FaRegComment
-          onClick={userPostCommentHandler}
-          className="w-4 h-4 text-gray-500 hover:cursor-pointer"
-        />
-        <AiOutlineRetweet
-          // onClick={userPostRetweetHandler}
-          className="w-5 h-5 text-gray-500 hover:cursor-pointer"
-        />
+        <div className="flex gap-2 text-gray-500 items-center">
+          <FaRegComment
+            onClick={userPostCommentHandler}
+            className="w-4 h-4 text-gray-500 hover:cursor-pointer"
+          />
+          <p>{comments}</p>
+        </div>
+        <AiOutlineRetweet className="w-5 h-5 text-gray-500 hover:cursor-pointer" />
         <div className="flex gap-2 text-gray-500">
           <HiOutlineHeart
             onClick={userPostLikeHandler}
@@ -105,6 +105,7 @@ function Post({
           loggedUserId={userDetails?.uid}
           loggedUserName={userDetails?.username}
           loggedUserFullName={userDetails?.fullname}
+          onAddComment={setComments}
         />
       )}
     </div>

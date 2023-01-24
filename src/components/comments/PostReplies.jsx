@@ -2,6 +2,7 @@ import React from "react";
 import { RxCross2 } from "react-icons/rx";
 import UserProfile from "../timeline/UserProfile";
 import Home from "../timeline/Home";
+import { updatePostReplies } from "../../firebase/services";
 
 function PostReplies({
   onClose,
@@ -15,7 +16,14 @@ function PostReplies({
   imageSrc,
   loggedUserName,
   loggedUserFullName,
+  onAddComment,
 }) {
+  const replyCommentHandler = function (reply) {
+    updatePostReplies(spDocId, loggedUserName, reply);
+    onClose(false);
+    onAddComment((prev) => (prev += 1));
+  };
+
   return (
     <div className="fixed h-[100vh] w-full top-0 left-0">
       <div className="fixed h-full  w-full bg-black/40" />
@@ -38,6 +46,7 @@ function PostReplies({
           </div>
 
           <Home
+            onReply={replyCommentHandler}
             avatarUrl={imageSrc}
             username={loggedUserName}
             fullname={loggedUserFullName}

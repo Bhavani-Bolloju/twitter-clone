@@ -10,7 +10,7 @@ function TimeLine({ userDetails }) {
   const { posts } = usePosts(following);
 
   return (
-    <div className="basis-1/2">
+    <div className="bg-white border border-gray-200">
       <div className="p-2">
         <p className="font-semibold text-xl mb-2">Home</p>
         <Home avatarUrl={imageSrc} username={username} fullname={fullname} />

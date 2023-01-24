@@ -108,5 +108,17 @@ export const postLikes = async function (docId, userId) {
   return {
     likes: user.likes.length,
     userLikes: user.likes.includes(userId),
+    comments: user.comments.length,
   };
+};
+
+export const updatePostReplies = async function (spDocId, userName, reply) {
+  const docRef = doc(db, "posts", spDocId);
+  console.log(docRef);
+  await updateDoc(docRef, {
+    comments: arrayUnion({
+      username: userName,
+      comment: reply,
+    }),
+  });
 };
