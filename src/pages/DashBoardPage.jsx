@@ -11,7 +11,8 @@ function DashBoardPage() {
   return (
     <div className="relative grid grid-cols-home gap-4">
       <Sidebar />
-      <div className="col-start-2 col-end-3 flex relative gap-5">
+
+      <div className="col-start-2 col-end-3 grid grid-cols-timeline relative gap-5">
         <Outlet />
         <SuggestedProfiles />
       </div>

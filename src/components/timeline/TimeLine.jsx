@@ -12,7 +12,6 @@ function TimeLine({ userDetails }) {
   return (
     <div className="bg-white border w-[100%] border-gray-200">
       <div className="p-2">
-        <p className="font-semibold text-xl mb-2">Home</p>
         <Home avatarUrl={imageSrc} username={username} fullname={fullname} />
       </div>
       {following.length < 0 ? (

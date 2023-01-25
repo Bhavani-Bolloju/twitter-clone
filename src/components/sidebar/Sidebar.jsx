@@ -13,7 +13,7 @@ import * as routes from "../../constants/route-paths";
 
 function Sidebar() {
   const { userDetails } = useUser();
-  console.log(userDetails);
+  // console.log(userDetails);
 
   return (
     <div className="fixed w-[250px] h-full border p-3 border-gray-200 bg-white">
