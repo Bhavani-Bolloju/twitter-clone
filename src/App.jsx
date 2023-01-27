@@ -16,10 +16,10 @@ function App() {
   return (
     <AuthContext.Provider value={{ user }}>
       <Routes>
-        <Route path="/" element={<DashBoardPage />}>
+        <Route exact path="/" element={<DashBoardPage />}>
           <Route path={routes.home} element={<HomePage />} />
           <Route path={routes.bookMark} element={<BookMarksPage />} />
-          <Route path={routes.profileuser} element={<ProfilePage />} />
+          <Route path=":id" element={<ProfilePage />} />
         </Route>
         <Route path={routes.signup} element={<SignupPage />} />
         <Route path={routes.signin} element={<LoginPage />} />

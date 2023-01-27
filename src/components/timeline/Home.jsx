@@ -21,6 +21,7 @@ function Home({ avatarUrl, username, fullname, onReply }) {
         onSubmit={(e) => {
           e.preventDefault();
           onReply(textRef.current.value);
+          textRef.current.value = "";
         }}
       >
         <textarea

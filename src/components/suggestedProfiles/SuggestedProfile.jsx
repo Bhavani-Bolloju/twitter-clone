@@ -21,7 +21,7 @@ function SuggestedProfile({
   };
 
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex justify-between gap-8 items-center">
       <UserProfile
         imageSrc={imageSrc}
         username={spUsername}

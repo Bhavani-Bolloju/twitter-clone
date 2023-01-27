@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FiHome, FiMail } from "react-icons/fi";
 import {
   HiOutlineBookmark,
@@ -8,12 +8,15 @@ import {
 import logo from "../../../public/twitter.svg";
 import useUser from "../hooks/use-user";
 import UserProfile from "../timeline/UserProfile";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import * as routes from "../../constants/route-paths";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase/firebase";
 
 function Sidebar() {
   const { userDetails } = useUser();
-  // console.log(userDetails);
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="fixed w-[250px] h-full border p-3 border-gray-200 bg-white">
@@ -34,20 +37,40 @@ function Sidebar() {
             <HiOutlineBookmark className="text-lg" />
             <p> BookMarks</p>
           </NavLink>
-          <NavLink to={routes.profileuser} className="flex items-center gap-2">
+          <NavLink
+            to={`/${userDetails?.username}`}
+            className="flex items-center gap-2"
+          >
             <HiOutlineUser className="text-xl" />
             <p> Profile</p>
           </NavLink>
         </ul>
 
         {userDetails && (
-          <div className="hover:bg-slate-100 px-2 py-3 rounded-full hover:cursor-pointer flex items-center justify-between">
-            <UserProfile
-              imageSrc={userDetails.imageSrc}
-              username={userDetails.username}
-              fullname={userDetails.fullname}
-            />
-            <HiDotsHorizontal />
+          <div className="relative">
+            {open && (
+              <div className="absolute text-xs w-full rounded-xl bottom-20 right-0 z-50 p-3 py-5 bg-gray-100 text-center">
+                <button
+                  onClick={() => {
+                    signOut(auth);
+                    navigate(routes.signin);
+                  }}
+                >
+                  <span className="font-semibold">Logout</span> @
+                  {userDetails?.username}
+                </button>
+              </div>
+            )}
+
+            <div className="hover:bg-slate-100 px-2 py-3 rounded-full hover:cursor-pointer flex items-center justify-between ">
+              <UserProfile
+                imageSrc={userDetails.imageSrc}
+                username={userDetails.username}
+                fullname={userDetails.fullname}
+              />
+
+              <HiDotsHorizontal onClick={() => setOpen((prev) => !prev)} />
+            </div>
           </div>
         )}
       </div>

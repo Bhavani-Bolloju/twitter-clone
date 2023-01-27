@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { getPosts, getUserByUserId } from "../../firebase/services";
 
-const usePosts = function (following) {
+const usePosts = function (following, uid) {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     const userPost = async function () {
-      const res = await getPosts(following);
+      const res = await getPosts(following, uid);
       const postDetails = res.map(async (post) => {
         const user = await getUserByUserId(post.userId);
         return { ...user, ...post };

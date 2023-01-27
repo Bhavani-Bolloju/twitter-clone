@@ -21,8 +21,12 @@ export const getUserByUserId = async function (userId) {
   return { ...userData, docId: doc.docs[0].id };
 };
 
-export const getPosts = async function (following) {
-  const q = query(collection(db, "posts"), where("userId", "in", following));
+export const getPosts = async function (following, uid) {
+  const q = query(
+    collection(db, "posts"),
+    where("userId", "in", [...following, uid])
+  );
+
   const docs = await getDocs(q);
   return docs.docs.map((doc) => ({ ...doc.data(), docId: doc.id }));
 };
@@ -78,6 +82,7 @@ export const toggleFollower = async function (
   userDocId,
   profileUserId
 ) {
+  console.log(isFollowing, profileuserDocId, userId, userDocId, profileUserId);
   await updateLoggedUserFollowingArray(isFollowing, userDocId, profileUserId);
   await updateProfileUserFollowersArray(isFollowing, profileuserDocId, userId);
 };
@@ -122,3 +127,13 @@ export const updatePostReplies = async function (spDocId, userName, reply) {
     }),
   });
 };
+
+export const getUserByUsername = async function (user) {
+  const qUser = query(collection(db, "users"), where("username", "==", user));
+  const docUser = await getDocs(qUser);
+  const userData = docUser?.docs[0]?.data();
+  return { ...userData, docId: docUser?.docs[0].id };
+};
+
+//userId in profile user following list ? unfollow : follow
+// export const userIsFollowing = function (userId) {};
