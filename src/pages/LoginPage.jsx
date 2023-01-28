@@ -21,7 +21,7 @@ function LoginPage() {
         inputPassword
       );
 
-      navigate(routes.home);
+      navigate(routes.dashboard);
     } catch (error) {
       setErrorFound(error.message);
     }

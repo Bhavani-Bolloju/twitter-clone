@@ -16,16 +16,34 @@ function App() {
   return (
     <AuthContext.Provider value={{ user }}>
       <Routes>
-        <Route exact path="/" element={<DashBoardPage />}>
-          <Route path={routes.home} element={<HomePage />} />
+        <Route
+          path={routes.dashboard}
+          element={user ? <DashBoardPage /> : <Navigate to={routes.signin} />}
+        >
+          <Route index element={<HomePage />} />
           <Route path={routes.bookMark} element={<BookMarksPage />} />
-          <Route path=":id" element={<ProfilePage />} />
+          <Route path={routes.home} element={<HomePage />} />
+          <Route path={`/:id`} element={<ProfilePage />} />
         </Route>
-        <Route path={routes.signup} element={<SignupPage />} />
-        <Route path={routes.signin} element={<LoginPage />} />
+        <Route
+          path={routes.signup}
+          element={user ? <Navigate to={routes.home} /> : <SignupPage />}
+        />
+        <Route
+          path={routes.signin}
+          element={user ? <Navigate to={routes.home} /> : <LoginPage />}
+        />
       </Routes>
     </AuthContext.Provider>
   );
 }
 
 export default App;
+
+// <Route path="/" element={<DashBoardPage />}>
+//           <Route path={routes.home} element={<HomePage />} />
+//           <Route path={routes.bookMark} element={<BookMarksPage />} />
+//           <Route path=":id" element={<ProfilePage />} />
+//         </Route>
+//         <Route path={routes.signup} element={<SignupPage />} />
+//         <Route path={routes.signin} element={<LoginPage />} />
