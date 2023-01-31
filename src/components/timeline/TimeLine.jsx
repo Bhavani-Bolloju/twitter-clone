@@ -1,15 +1,21 @@
 import React, { useEffect } from "react";
 import Home from "./Home";
-// import { getPosts } from "../../firebase/services";
+import { getPosts } from "../../firebase/services";
 import usePosts from "../hooks/use-posts";
 import Posts from "./Posts";
 import { db } from "../../firebase/firebase";
 import { addDoc, collection } from "firebase/firestore";
+import { useId } from "react";
 
 function TimeLine({ userDetails }) {
   const { imageSrc, username, fullname, uid, following } = userDetails;
 
-  const { posts } = usePosts(following, uid);
+  const id = useId();
+
+  const { posts } = usePosts(getPosts, following, uid);
+
+  console.log(posts);
+
   const userTweetHandler = async function (text) {
     console.log(text);
 
@@ -20,20 +26,14 @@ function TimeLine({ userDetails }) {
       comments: [],
       likes: [],
       postImage: "",
-      postId: "",
+      postId: id,
       username,
       userId: uid,
     });
-
-    // await addDoc(collection(db, "users"), {
-    //   uid: user.uid,
-    //   username: inputuserName,
-    //   fullname: inputFullName,
-    // });
   };
 
   return (
-    <div className="bg-white border w-[100%] border-gray-200">
+    <div className=" border w-[100%] border-gray-200">
       <div className="p-2">
         <Home
           avatarUrl={imageSrc}
@@ -46,7 +46,16 @@ function TimeLine({ userDetails }) {
         <p>No posts follow someone</p>
       ) : (
         <div>
-          {posts && posts.map((post) => <Posts key={post.docId} post={post} />)}
+          {posts &&
+            posts.map((post) => (
+              <Posts
+                key={post.docId}
+                post={post}
+                loggedUsername={username}
+                loggedUserId={uid}
+                following={following}
+              />
+            ))}
         </div>
       )}
     </div>

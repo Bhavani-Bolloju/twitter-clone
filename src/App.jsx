@@ -9,6 +9,10 @@ import DashBoardPage from "./pages/DashBoardPage";
 import HomePage from "./pages/HomePage";
 import BookMarksPage from "./pages/BookMarksPage";
 import ProfilePage from "./pages/ProfilePage";
+import NoMatch from "./pages/NoMatch";
+import TweetsPage from "./pages/TweetsPage";
+import TweetsAndReplies from "./pages/TweetsAndReplies";
+import LikesPage from "./pages/LikesPage";
 
 function App() {
   const { user } = useAuth();
@@ -23,7 +27,12 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path={routes.bookMark} element={<BookMarksPage />} />
           <Route path={routes.home} element={<HomePage />} />
-          <Route path={`/:id`} element={<ProfilePage />} />
+          <Route path={`/:id`} element={<ProfilePage />}>
+            <Route index element={<TweetsPage />} />
+            <Route path={`/:id/${routes.tweets}`} element={<TweetsPage />} />
+            <Route path={`/:id/${routes.t_r}`} element={<TweetsAndReplies />} />
+            <Route path={`/:id/${routes.likes}`} element={<LikesPage />} />
+          </Route>
         </Route>
         <Route
           path={routes.signup}
@@ -33,17 +42,10 @@ function App() {
           path={routes.signin}
           element={user ? <Navigate to={routes.home} /> : <LoginPage />}
         />
+        <Route path="*" element={<NoMatch />} />
       </Routes>
     </AuthContext.Provider>
   );
 }
 
 export default App;
-
-// <Route path="/" element={<DashBoardPage />}>
-//           <Route path={routes.home} element={<HomePage />} />
-//           <Route path={routes.bookMark} element={<BookMarksPage />} />
-//           <Route path=":id" element={<ProfilePage />} />
-//         </Route>
-//         <Route path={routes.signup} element={<SignupPage />} />
-//         <Route path={routes.signin} element={<LoginPage />} />

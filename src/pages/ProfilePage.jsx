@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import useUser from "../components/hooks/use-user";
 import { getUserByUsername } from "../firebase/services";
 import ProfileHeader from "../components/profile/ProfileHeader";
+import ProfileMain from "../components/profile/ProfileMain";
 
 function ProfilePage() {
   const { userDetails } = useUser();
@@ -22,19 +23,22 @@ function ProfilePage() {
   }, [userName, userDetails]);
 
   return (
-    <div className="bg-white border w-[100%]  border-gray-200">
+    <div className="bg-white border w-[100%] h-[100vh]  border-gray-200">
       {user && (
-        <ProfileHeader
-          username={user.username}
-          imageSrc={user?.imageSrc ? user?.imageSrc : ""}
-          fullname={user.fullname}
-          followers={user.followers}
-          following={user.following}
-          userId={userDetails?.uid}
-          profileUserId={user.uid}
-          userDocId={userDetails?.docId}
-          profileUserDocId={user.docId}
-        />
+        <>
+          <ProfileHeader
+            username={user.username}
+            imageSrc={user?.imageSrc ? user?.imageSrc : ""}
+            fullname={user.fullname}
+            followers={user.followers}
+            following={user.following}
+            userId={userDetails?.uid}
+            profileUserId={user.uid}
+            userDocId={userDetails?.docId}
+            profileUserDocId={user.docId}
+          />
+          <ProfileMain profileUserId={user.uid} />
+        </>
       )}
     </div>
   );

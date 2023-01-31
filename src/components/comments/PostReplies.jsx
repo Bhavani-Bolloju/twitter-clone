@@ -25,9 +25,9 @@ function PostReplies({
   };
 
   return (
-    <div className="fixed h-[100vh] w-full top-0 left-0">
+    <div className="fixed h-[100vh] z-20 w-full top-0 left-0">
       <div className="fixed h-full  w-full bg-black/40" />
-      <div className="fixed translate-x-[-50%] top-20 left-1/2 z-20 bg-white w-[450px] p-3 rounded-lg">
+      <div className="fixed translate-x-[-50%] top-20 left-1/2 z-20 bg-white w-[500px] p-4 rounded-xl">
         <RxCross2 onClick={() => onClose(false)} className="cursor-pointer" />
         <div className="flex flex-col gap-6 mt-3 pl-5 pt-4">
           <div>

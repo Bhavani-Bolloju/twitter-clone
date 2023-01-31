@@ -12,6 +12,7 @@ import {
   arrayRemove,
   onSnapshot,
 } from "firebase/firestore";
+import { async } from "@firebase/util";
 
 export const getUserByUserId = async function (userId) {
   const q = query(collection(db, "users"), where("uid", "==", userId));
@@ -28,7 +29,10 @@ export const getPosts = async function (following, uid) {
   );
 
   const docs = await getDocs(q);
-  return docs.docs.map((doc) => ({ ...doc.data(), docId: doc.id }));
+  const allPosts = docs.docs.map((doc) => ({ ...doc.data(), docId: doc.id }));
+  // console.log(allPosts);
+
+  return allPosts;
 };
 
 export const getSuggestedProfiles = async function (userid, following) {
@@ -105,7 +109,7 @@ export const updatePostUserLikesArray = async function (
   );
 };
 
-export const postLikes = async function (docId, userId) {
+export const postCount = async function (docId, userId, postId) {
   const docRef = doc(db, "posts", docId);
   const docSnap = await getDoc(docRef);
   const user = docSnap.data();
@@ -114,6 +118,8 @@ export const postLikes = async function (docId, userId) {
     likes: user.likes.length,
     userLikes: user.likes.includes(userId),
     comments: user.comments.length,
+    retweets: user.retweets?.length,
+    setRetweeted: user.retweets?.includes(postId),
   };
 };
 
@@ -135,5 +141,101 @@ export const getUserByUsername = async function (user) {
   return { ...userData, docId: docUser?.docs[0].id };
 };
 
-//userId in profile user following list ? unfollow : follow
-// export const userIsFollowing = function (userId) {};
+export const getUserLikedPosts = async function (userId) {
+  const q = query(
+    collection(db, "posts"),
+    where("likes", "array-contains", userId)
+  );
+  const doc = await getDocs(q);
+
+  const likedPosts = doc.docs.map((post) => ({
+    ...post.data(),
+    docId: post.id,
+  }));
+
+  const postDetails = likedPosts.map(async (post) => {
+    const user = await getUserByUserId(post.userId);
+    return { ...user, ...post };
+  });
+  const data = await Promise.all(postDetails);
+
+  return data;
+};
+
+//adding retweets to the retweets array in firebase
+
+export const updateRetweetsArray = async function (
+  tweeting,
+  docId,
+  postId,
+  userId
+) {
+  const docRef = doc(db, "posts", docId);
+
+  await updateDoc(
+    docRef,
+    !tweeting
+      ? {
+          retweets: arrayUnion(userId),
+        }
+      : {
+          retweets: arrayRemove(userId),
+        }
+  );
+};
+
+export const getRetweetedPosts = async function (followingArr) {
+  const q = query(
+    collection(db, "posts"),
+    where("retweets", "array-contains-any", followingArr)
+  );
+  const doc = await getDocs(q);
+  // console.log(doc);
+
+  const data = doc.docs.map((post) => ({
+    ...post.data(),
+    docId: post.id,
+    type: "retweet",
+  }));
+  return data;
+};
+
+export const retweetsInUsers = async function (tweeting, userDocId, postId) {
+  const docRef = doc(db, "users", userDocId);
+
+  await updateDoc(
+    docRef,
+    !tweeting
+      ? {
+          retweets: arrayUnion(postId),
+        }
+      : {
+          retweets: arrayRemove(postId),
+        }
+  );
+};
+
+export const getTweetedPostsFromUser = async function (userId, following) {
+  const q = query(collection(db, "users"));
+  const profiles = await getDocs(q);
+  const data = profiles.docs
+    .map((doc) => ({ ...doc.data(), docId: doc.id }))
+    .filter((doc) => following.includes(doc.uid));
+  const userRetweets = data.flatMap(async (user) => {
+    const retweets = user.retweets;
+    const q = query(collection(db, "posts"), where("postId", "in", retweets));
+    const getPosts = await getDocs(q);
+
+    const postsData = getPosts.docs.map((post) => ({
+      ...post.data(),
+      docId: post.id,
+      type: "retweet",
+      tweetedUsername: user.username,
+      tweetedFullname: user.fullname,
+    }));
+    return postsData;
+  });
+
+  const postData = await Promise.all(userRetweets);
+  return postData;
+};

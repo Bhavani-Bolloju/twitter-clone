@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import useUser from "../hooks/use-user";
 import { toggleFollower } from "../../firebase/services";
+import { BsArrowLeft } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
+import * as routes from "../../constants/route-paths";
 
 function ProfileHeader({
   username,
@@ -16,6 +19,11 @@ function ProfileHeader({
 }) {
   const { userDetails } = useUser();
   const [userFollowing, setUserFollowing] = useState();
+  const navigate = useNavigate();
+
+  const backHomeHandler = function () {
+    navigate(routes.home);
+  };
 
   useEffect(() => {
     const isUserFollowing = followers.includes(userDetails?.uid);
@@ -23,11 +31,6 @@ function ProfileHeader({
   }, [userDetails?.uid]);
 
   const followHandler = function () {
-    //   isFollowing,
-    // profileuserDocId,
-    // userId,
-    // userDocId,
-    // profileUserId
     toggleFollower(
       userFollowing,
       profileUserDocId,
@@ -42,12 +45,16 @@ function ProfileHeader({
   return (
     <div className="flex flex-col ">
       <header className="h-12 ">
-        <div className="bg-white/60 h-12 w-[600px] z-10 p-3 fixed">
-          {username}
+        <div className="bg-white/60 h-12 w-[600px] z-10 p-3 fixed flex items-center gap-2">
+          <BsArrowLeft
+            onClick={backHomeHandler}
+            className="hover: cursor-pointer"
+          />
+          <span className="capitalize text-sm justify-center">{username}</span>
         </div>
       </header>
-      <div className="self-stretch h-[100vh]">
-        <div className="relative h-44 bg-slate-200">
+      <div>
+        <div className="relative h-44 ">
           <div className="absolute -bottom-10 left-4 rounded-full h-32 w-32 bg-blue-800 flex border-4 border-white items-center justify-center text-white">
             {imageSrc ? (
               <img
@@ -60,7 +67,7 @@ function ProfileHeader({
             )}
           </div>
         </div>
-        <div className="py-5 px-6 border-b border-gray-200">
+        <div className="py-5 px-6">
           <div className="flex justify-end">
             {profileUserId !== userId && (
               <button
@@ -71,7 +78,7 @@ function ProfileHeader({
               </button>
             )}
           </div>
-          <div className="mt-4 flex flex-col gap-2">
+          <div className="mt-6 flex flex-col gap-2">
             <div>
               <p className="text-lg capitalize font-bold text-gray-800 -mb-1">
                 {fullname}
@@ -94,7 +101,6 @@ function ProfileHeader({
             </div>
           </div>
         </div>
-        <main>main content</main>
       </div>
     </div>
   );

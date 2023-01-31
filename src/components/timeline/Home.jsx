@@ -30,7 +30,7 @@ function Home({ avatarUrl, username, fullname, onReply }) {
           placeholder="What's happening?"
           ref={textRef}
         />
-        <button className="bg-blue-600 text-sm px-4 py-1 rounded-2xl text-gray-100 self-end">
+        <button className="bg-blue-600 text-sm px-4 py-1 rounded-2xl text-gray-100 self-end font-semibold">
           Tweet
         </button>
       </form>

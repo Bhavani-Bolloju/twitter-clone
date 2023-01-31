@@ -19,7 +19,7 @@ function Sidebar() {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed w-[250px] h-full border p-3 border-gray-200 bg-white">
+    <div className="fixed w-[250px] h-full border p-3 border-gray-200 ">
       <div>
         <img src={logo} alt="twitter" className="w-8 mb-3" />
       </div>
@@ -49,7 +49,7 @@ function Sidebar() {
         {userDetails && (
           <div className="relative">
             {open && (
-              <div className="absolute text-xs w-full rounded-xl bottom-20 right-0 z-50 p-3 py-5 bg-gray-100 text-center">
+              <div className="font-semibold absolute text-xs w-full rounded-xl bottom-20 -right-5 py-6 shadow-lg bg-white text-gray-800 text-center hover:text-blue-400">
                 <button
                   onClick={() => {
                     signOut(auth);

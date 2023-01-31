@@ -2,11 +2,16 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineComment, AiOutlineRetweet } from "react-icons/ai";
 import { HiOutlineHeart } from "react-icons/hi";
 import { FaRegComment } from "react-icons/fa";
+import { retweetsInUsers } from "../../firebase/services";
 
 import UserProfile from "./UserProfile";
 import useUser from "../hooks/use-user";
-import { updatePostUserLikesArray } from "../../firebase/services";
-import { postLikes } from "../../firebase/services";
+import {
+  updatePostUserLikesArray,
+  updateRetweetsArray,
+  postCount,
+} from "../../firebase/services";
+
 import PostReplies from "../comments/PostReplies";
 
 function Post({
@@ -17,21 +22,28 @@ function Post({
   caption,
   post_image,
   docId,
+  postId,
   userId,
   allLikes,
+  retweets,
 }) {
   const { userDetails } = useUser();
   const [liked, setLiked] = useState(false);
   const [totalLikes, setTotalLikes] = useState(0);
   const [overlay, setOverlay] = useState(false);
   const [comments, setComments] = useState(0);
+  // const [totalRetweets, setTotalRetweets] = useState(0);
+  const [retweeted, setRetweeted] = useState(false);
+  // console.log(retweets, postId);
+  // console.log(userDetails);
 
   useEffect(() => {
     const getPostLikes = async function () {
-      const res = await postLikes(docId, userDetails?.uid);
+      const res = await postCount(docId, userDetails?.uid, postId);
       setLiked(res.userLikes);
       setTotalLikes(res.likes);
       setComments(res.comments);
+      // setTotalRetweets(res.retweets);
     };
 
     if (userDetails) {
@@ -50,9 +62,13 @@ function Post({
   const userPostCommentHandler = function () {
     setOverlay(true);
   };
-  // const userPostRetweetHandler = function () {
-  //   console.log("retweet");
-  // };
+
+  const retweetHandler = async function () {
+    // updateRetweetsArray(retweeted, docId, postId, userDetails?.uid);
+    retweetsInUsers(retweeted, userDetails?.docId, postId);
+    setRetweeted((rt) => !rt);
+    // setTotalRetweets((trt) => (!retweeted ? (trt += 1) : (trt -= 1)));
+  };
 
   return (
     <div className="flex flex-col gap-3 py-4 text-sm border border-gray-100 justify-center px-5">
@@ -79,11 +95,21 @@ function Post({
           />
           <p>{comments}</p>
         </div>
-        <AiOutlineRetweet className="w-5 h-5 text-gray-500 hover:cursor-pointer" />
-        <div className="flex gap-2 text-gray-500">
+        <div className="flex gap-2 text-gray-500 hover:cursor-pointer items-center rounded-lg">
+          <AiOutlineRetweet
+            onClick={retweetHandler}
+            className={`w-7 h-7  hover:cursor-pointer hover:bg-green-100 p-1 rounded-full ${
+              retweeted ? "text-green-400" : "text-gray-500"
+            }`}
+          />
+          <span className={`${retweeted ? "text-green-400" : "text-gray-500"}`}>
+            {/* {totalRetweets} */}0
+          </span>
+        </div>
+        <div className="flex gap-2 items-center text-gray-500">
           <HiOutlineHeart
             onClick={userPostLikeHandler}
-            className={`w-5 h-5 hover:cursor-pointer  ${
+            className={`w-7 h-7 p-1 hover:cursor-pointer rounded-full hover:bg-red-100 ${
               liked ? "text-red-500 fill-red-500" : "text-gray-500"
             }`}
           />

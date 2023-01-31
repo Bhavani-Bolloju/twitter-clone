@@ -12,7 +12,6 @@ function SuggestedProfile({
   imageSrc,
   userDocId,
 }) {
-  // console.log(userDocId);
   const [toFollow, setToFollow] = useState(false);
 
   const followUserHandler = function () {
@@ -21,7 +20,7 @@ function SuggestedProfile({
   };
 
   return (
-    <div className="flex justify-between gap-8 items-center">
+    <div className="flex justify-between gap-8 items-center bg-gray-50">
       <UserProfile
         imageSrc={imageSrc}
         username={spUsername}
@@ -29,7 +28,7 @@ function SuggestedProfile({
       />
       <button
         onClick={followUserHandler}
-        className="bg-gray-700 text-xs text-gray-100 font-semibold px-4 py-[5px] rounded-full hover:bg-gray-800"
+        className="bg-gray-900 text-xs text-gray-100 font-semibold px-4 py-[5px] rounded-full hover:bg-gray-700"
       >
         {!toFollow ? "follow" : "unfollow"}
       </button>

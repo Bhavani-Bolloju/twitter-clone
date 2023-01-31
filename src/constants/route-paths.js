@@ -4,3 +4,6 @@ export const bookMark = "bookmark";
 export const signup = "/signup";
 export const signin = "/signin";
 export const dashboard = "/";
+export const tweets = "tweets";
+export const t_r = "t_r";
+export const likes = "likes";
