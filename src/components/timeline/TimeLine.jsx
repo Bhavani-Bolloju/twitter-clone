@@ -20,6 +20,8 @@ function TimeLine({ userDetails }) {
 
   const allPosts = [...posts];
 
+  // console.log(allPosts);
+
   const userTweetHandler = async function (text) {
     console.log(text);
 
@@ -50,7 +52,7 @@ function TimeLine({ userDetails }) {
         <p>No posts follow someone</p>
       ) : (
         <div>
-          {allPosts ? (
+          {allPosts && allPosts ? (
             allPosts.map((post, i) => (
               <Posts
                 key={post.docId + i}

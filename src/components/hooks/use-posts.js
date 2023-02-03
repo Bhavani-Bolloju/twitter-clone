@@ -11,10 +11,8 @@ const usePosts = function (fn, following, uid) {
   useEffect(() => {
     const userPost = async function () {
       const res = await fn(following, uid);
-
       const tweet = await getTweetedPostsFromUser(uid, following);
       const resData = tweet.flatMap((post) => post);
-
       let posts = [];
       if (tweet[0]) {
         posts = [...res, ...resData];
@@ -23,6 +21,7 @@ const usePosts = function (fn, following, uid) {
       }
       const postDetails = posts.map(async (post) => {
         const user = await getUserByUserId(post.userId);
+
         return { ...user, ...post };
       });
       const data = await Promise.all(postDetails);
@@ -31,6 +30,8 @@ const usePosts = function (fn, following, uid) {
 
     userPost();
   }, []);
+
+  // console.log(posts);
 
   return { posts };
 };

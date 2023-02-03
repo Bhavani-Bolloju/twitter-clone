@@ -29,7 +29,10 @@ export const getPosts = async function (following, uid) {
   );
 
   const docs = await getDocs(q);
-  const allPosts = docs.docs.map((doc) => ({ ...doc.data(), docId: doc.id }));
+  const allPosts = docs.docs.map((doc) => ({
+    ...doc.data(),
+    postDocId: doc.id,
+  }));
   // console.log(allPosts);
 
   return allPosts;
@@ -68,6 +71,8 @@ export const updateProfileUserFollowersArray = async function (
   userId
 ) {
   const data = doc(db, "users", profileuserDocId);
+  console.log(isFollowing, profileuserDocId, userId);
+  console.log(data);
 
   await updateDoc(
     data,
@@ -86,7 +91,7 @@ export const toggleFollower = async function (
   userDocId,
   profileUserId
 ) {
-  console.log(isFollowing, profileuserDocId, userId, userDocId, profileUserId);
+  // console.log(isFollowing, profileuserDocId, userId, userDocId, profileUserId);
   await updateLoggedUserFollowingArray(isFollowing, userDocId, profileUserId);
   await updateProfileUserFollowersArray(isFollowing, profileuserDocId, userId);
 };
@@ -96,6 +101,8 @@ export const updatePostUserLikesArray = async function (
   postUserDocId,
   loggeduserId
 ) {
+  console.log(isLiked, postUserDocId, loggeduserId);
+
   const data = doc(db, "posts", postUserDocId);
   await updateDoc(
     data,
@@ -113,7 +120,6 @@ export const postCount = async function (docId, userId, postId) {
   const docRef = doc(db, "posts", docId);
   const docSnap = await getDoc(docRef);
   const user = docSnap.data();
-  // console.log(user.retweets, userId, user.retweets.includes(userId));
 
   return {
     likes: user?.likes.length,
@@ -121,6 +127,7 @@ export const postCount = async function (docId, userId, postId) {
     comments: user.comments.length,
     retweets: user.retweets?.length,
     isRetweeted: user.retweets.includes(userId),
+    isBookmarked: user.bookmark.includes(userId),
   };
 };
 
@@ -163,14 +170,7 @@ export const getUserLikedPosts = async function (userId) {
   return data;
 };
 
-//adding retweets to the retweets array in firebase
-
-export const updateRetweetsArray = async function (
-  tweeting,
-  docId,
-  postId,
-  userId
-) {
+export const updateRetweetsArray = async function (tweeting, docId, userId) {
   const docRef = doc(db, "posts", docId);
 
   await updateDoc(
@@ -191,11 +191,10 @@ export const getRetweetedPosts = async function (followingArr) {
     where("retweets", "array-contains-any", followingArr)
   );
   const doc = await getDocs(q);
-  // console.log(doc);
 
   const data = doc.docs.map((post) => ({
     ...post.data(),
-    docId: post.id,
+    postDocId: post.id,
     type: "retweet",
   }));
   return data;
@@ -203,6 +202,8 @@ export const getRetweetedPosts = async function (followingArr) {
 
 export const retweetsInUsers = async function (tweeting, userDocId, postId) {
   const docRef = doc(db, "users", userDocId);
+
+  console.log(tweeting, userDocId, postId);
 
   await updateDoc(
     docRef,
@@ -222,7 +223,7 @@ export const getTweetedPostsFromUser = async function (userId, following) {
   const profiles = await getDocs(q);
 
   const data = profiles.docs
-    .map((doc) => ({ ...doc.data(), docId: doc.id }))
+    .map((doc) => ({ ...doc.data(), postDocId: doc.id }))
     .filter((doc) => following.includes(doc.uid));
 
   const userRetweets = data.flatMap(async (user) => {
@@ -233,16 +234,34 @@ export const getTweetedPostsFromUser = async function (userId, following) {
     const q = query(collection(db, "posts"), where("postId", "in", retweets));
     const getPosts = await getDocs(q);
 
-    const postsData = getPosts.docs.map((post, i) => ({
-      ...post.data(),
-      docId: post.id,
-      type: "retweet",
-      tweetedUsername: user.username,
-      tweetedFullname: user.fullname,
-    }));
+    const postsData = getPosts.docs.map((post, i) => {
+      return {
+        ...post.data(),
+        postDocId: post.id,
+        type: "retweet",
+        tweetedUsername: user.username,
+        tweetedFullname: user.fullname,
+      };
+    });
     return postsData;
   });
 
   const postData = await Promise.all(userRetweets);
+
   return postData;
+};
+
+export const bookMarkPost = async function (isBookmarked, docId, loggedUserId) {
+  const docRef = doc(db, "posts", docId);
+
+  await updateDoc(
+    docRef,
+    !isBookmarked
+      ? {
+          bookmark: arrayUnion(loggedUserId),
+        }
+      : {
+          bookmark: arrayRemove(loggedUserId),
+        }
+  );
 };

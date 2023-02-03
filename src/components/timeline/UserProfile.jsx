@@ -8,7 +8,7 @@ function UserProfile({ imageSrc, fullname, username }) {
       <div>
         <Link
           to={`/${username.trim()}`}
-          className="font-semibold capitalize hover:border-b border-gray-400"
+          className="font-semibold capitalize text-sm hover:border-b border-gray-400"
         >
           {fullname}
         </Link>

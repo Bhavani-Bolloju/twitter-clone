@@ -10,6 +10,7 @@ import {
   updateRetweetsArray,
   postCount,
   retweetsInUsers,
+  bookMarkPost,
 } from "../../firebase/services";
 import UserProfileHeader from "./UserProfileHeader";
 
@@ -20,17 +21,18 @@ import * as routes from "../../constants/route-paths";
 function Post({
   fullname,
   username,
-  post,
   imageSrc,
   caption,
   post_image,
-  docId,
-  postId,
   userId,
+  postDocId,
+  docId,
   allLikes,
+  postId,
   isRetweet,
   retweetUsername,
   retweetFullname,
+  following,
 }) {
   const { userDetails } = useUser();
   const [liked, setLiked] = useState(false);
@@ -39,15 +41,18 @@ function Post({
   const [comments, setComments] = useState(0);
   const [totalRetweets, setTotalRetweets] = useState(0);
   const [retweeted, setRetweeted] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
     const getPostLikes = async function () {
-      const res = await postCount(docId, userDetails?.uid, postId);
+      const res = await postCount(postDocId, userDetails?.uid, postId);
       setLiked(res.userLikes);
       setTotalLikes(res.likes);
       setComments(res.comments);
       setTotalRetweets(res.retweets);
       setRetweeted(res.isRetweeted);
+      console.log(res.isBookmarked);
+      setIsBookmarked(res.isBookmarked);
     };
 
     if (userDetails) {
@@ -56,7 +61,7 @@ function Post({
   }, [userDetails?.uid]);
 
   const userPostLikeHandler = function () {
-    updatePostUserLikesArray(liked, docId, userDetails.uid);
+    updatePostUserLikesArray(liked, postDocId, userDetails.uid);
     setLiked((prev) => !prev);
 
     setTotalLikes((count) => {
@@ -68,10 +73,16 @@ function Post({
   };
 
   const retweetHandler = async function () {
-    updateRetweetsArray(retweeted, docId, postId, userDetails?.uid);
+    updateRetweetsArray(retweeted, postDocId, userDetails?.uid);
     retweetsInUsers(retweeted, userDetails?.docId, postId);
     setRetweeted((rt) => !rt);
     setTotalRetweets((trt) => (!retweeted ? (trt += 1) : (trt -= 1)));
+  };
+
+  const bookmarkHandler = function () {
+    setIsBookmarked((prev) => !prev);
+    console.log(isBookmarked, postDocId, userDetails?.uid);
+    bookMarkPost(isBookmarked, postDocId, userDetails?.uid);
   };
 
   return (
@@ -84,14 +95,20 @@ function Post({
           >
             @{retweetUsername}
           </Link>
-          Retweeted
+          <span> Retweeted</span>
         </div>
       )}
 
       <UserProfileHeader
+        userId={userId}
+        loggedUserId={userDetails?.uid}
+        following={userDetails?.following}
         username={username}
         imageSrc={imageSrc}
         fullname={fullname}
+        bookmark={isBookmarked}
+        onBookmark={bookmarkHandler}
+        loggedUserDocId={userDetails?.docId}
       />
       <main className="col-span-1 row-span-3 ml-[50px] ">
         <p>{caption}</p>
@@ -142,7 +159,7 @@ function Post({
           spFullname={fullname}
           spUsername={username}
           spUserId={userId}
-          spDocId={docId}
+          spDocId={postId}
           imageSrc={userDetails?.imageSrc}
           loggedUserId={userDetails?.uid}
           loggedUserName={userDetails?.username}
