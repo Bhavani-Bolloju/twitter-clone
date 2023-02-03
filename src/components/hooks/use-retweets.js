@@ -2,6 +2,7 @@ import useUser from "./use-user";
 import {
   getRetweetedPosts,
   getTweetedPostsFromUser,
+  getUserByUserId,
 } from "../../firebase/services";
 import { useEffect, useState } from "react";
 
@@ -16,8 +17,17 @@ export const useRetweets = function () {
         userDetails.following
       );
 
-      const data = res.flatMap((post) => post);
-      setRetweets(data);
+      const data =
+        res &&
+        res
+          .flatMap((post) => post)
+          .map(async (post) => {
+            const user = await getUserByUserId(post.userId);
+            return { ...user, ...post };
+          });
+      const post = await Promise.all(data);
+
+      setRetweets(post);
     };
 
     if (userDetails?.following) {

@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { getPosts, getUserByUserId } from "../../firebase/services";
+import {
+  getPosts,
+  getUserByUserId,
+  getTweetedPostsFromUser,
+} from "../../firebase/services";
 
 const usePosts = function (fn, following, uid) {
   const [posts, setPosts] = useState([]);
@@ -7,7 +11,17 @@ const usePosts = function (fn, following, uid) {
   useEffect(() => {
     const userPost = async function () {
       const res = await fn(following, uid);
-      const postDetails = res.map(async (post) => {
+
+      const tweet = await getTweetedPostsFromUser(uid, following);
+      const resData = tweet.flatMap((post) => post);
+
+      let posts = [];
+      if (tweet[0]) {
+        posts = [...res, ...resData];
+      } else {
+        posts = res;
+      }
+      const postDetails = posts.map(async (post) => {
         const user = await getUserByUserId(post.userId);
         return { ...user, ...post };
       });

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineComment, AiOutlineRetweet } from "react-icons/ai";
 import { HiOutlineHeart } from "react-icons/hi";
 import { FaRegComment } from "react-icons/fa";
-import { retweetsInUsers } from "../../firebase/services";
 
 import UserProfile from "./UserProfile";
 import useUser from "../hooks/use-user";
@@ -10,9 +9,13 @@ import {
   updatePostUserLikesArray,
   updateRetweetsArray,
   postCount,
+  retweetsInUsers,
 } from "../../firebase/services";
+import UserProfileHeader from "./UserProfileHeader";
 
 import PostReplies from "../comments/PostReplies";
+import { Link } from "react-router-dom";
+import * as routes from "../../constants/route-paths";
 
 function Post({
   fullname,
@@ -25,17 +28,17 @@ function Post({
   postId,
   userId,
   allLikes,
-  retweets,
+  isRetweet,
+  retweetUsername,
+  retweetFullname,
 }) {
   const { userDetails } = useUser();
   const [liked, setLiked] = useState(false);
   const [totalLikes, setTotalLikes] = useState(0);
   const [overlay, setOverlay] = useState(false);
   const [comments, setComments] = useState(0);
-  // const [totalRetweets, setTotalRetweets] = useState(0);
+  const [totalRetweets, setTotalRetweets] = useState(0);
   const [retweeted, setRetweeted] = useState(false);
-  // console.log(retweets, postId);
-  // console.log(userDetails);
 
   useEffect(() => {
     const getPostLikes = async function () {
@@ -43,7 +46,8 @@ function Post({
       setLiked(res.userLikes);
       setTotalLikes(res.likes);
       setComments(res.comments);
-      // setTotalRetweets(res.retweets);
+      setTotalRetweets(res.retweets);
+      setRetweeted(res.isRetweeted);
     };
 
     if (userDetails) {
@@ -64,17 +68,29 @@ function Post({
   };
 
   const retweetHandler = async function () {
-    // updateRetweetsArray(retweeted, docId, postId, userDetails?.uid);
+    updateRetweetsArray(retweeted, docId, postId, userDetails?.uid);
     retweetsInUsers(retweeted, userDetails?.docId, postId);
     setRetweeted((rt) => !rt);
-    // setTotalRetweets((trt) => (!retweeted ? (trt += 1) : (trt -= 1)));
+    setTotalRetweets((trt) => (!retweeted ? (trt += 1) : (trt -= 1)));
   };
 
   return (
-    <div className="flex flex-col gap-3 py-4 text-sm border border-gray-100 justify-center px-5">
-      <UserProfile
-        imageSrc={imageSrc}
+    <div className="flex flex-col gap-3 py-4 text-sm border border-gray-100 justify-center px-5 hover:cursor-pointer hover:bg-gray-50">
+      {isRetweet && (
+        <div className="text-[13px] font-semibold text-gray-600">
+          <Link
+            to={`/${retweetUsername.trim()}`}
+            className="font-semibold capitalize hover:border-b border-gray-400"
+          >
+            @{retweetUsername}
+          </Link>
+          Retweeted
+        </div>
+      )}
+
+      <UserProfileHeader
         username={username}
+        imageSrc={imageSrc}
         fullname={fullname}
       />
       <main className="col-span-1 row-span-3 ml-[50px] ">
@@ -103,7 +119,7 @@ function Post({
             }`}
           />
           <span className={`${retweeted ? "text-green-400" : "text-gray-500"}`}>
-            {/* {totalRetweets} */}0
+            {totalRetweets}
           </span>
         </div>
         <div className="flex gap-2 items-center text-gray-500">

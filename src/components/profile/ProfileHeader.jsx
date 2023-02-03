@@ -54,7 +54,7 @@ function ProfileHeader({
         </div>
       </header>
       <div>
-        <div className="relative h-44 ">
+        <div className="relative h-44 bg-slate-200">
           <div className="absolute -bottom-10 left-4 rounded-full h-32 w-32 bg-blue-800 flex border-4 border-white items-center justify-center text-white">
             {imageSrc ? (
               <img

@@ -113,13 +113,14 @@ export const postCount = async function (docId, userId, postId) {
   const docRef = doc(db, "posts", docId);
   const docSnap = await getDoc(docRef);
   const user = docSnap.data();
+  // console.log(user.retweets, userId, user.retweets.includes(userId));
 
   return {
-    likes: user.likes.length,
+    likes: user?.likes.length,
     userLikes: user.likes.includes(userId),
     comments: user.comments.length,
     retweets: user.retweets?.length,
-    setRetweeted: user.retweets?.includes(postId),
+    isRetweeted: user.retweets.includes(userId),
   };
 };
 
@@ -217,16 +218,22 @@ export const retweetsInUsers = async function (tweeting, userDocId, postId) {
 
 export const getTweetedPostsFromUser = async function (userId, following) {
   const q = query(collection(db, "users"));
+
   const profiles = await getDocs(q);
+
   const data = profiles.docs
     .map((doc) => ({ ...doc.data(), docId: doc.id }))
     .filter((doc) => following.includes(doc.uid));
+
   const userRetweets = data.flatMap(async (user) => {
     const retweets = user.retweets;
+
+    if (retweets.length <= 0) return;
+
     const q = query(collection(db, "posts"), where("postId", "in", retweets));
     const getPosts = await getDocs(q);
 
-    const postsData = getPosts.docs.map((post) => ({
+    const postsData = getPosts.docs.map((post, i) => ({
       ...post.data(),
       docId: post.id,
       type: "retweet",

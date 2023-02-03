@@ -6,6 +6,7 @@ import Posts from "./Posts";
 import { db } from "../../firebase/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { useId } from "react";
+import { useRetweets } from "../hooks/use-retweets";
 
 function TimeLine({ userDetails }) {
   const { imageSrc, username, fullname, uid, following } = userDetails;
@@ -13,8 +14,11 @@ function TimeLine({ userDetails }) {
   const id = useId();
 
   const { posts } = usePosts(getPosts, following, uid);
+  // const { retweets } = useRetweets();
+  // console.log(retweets);
+  // console.log(posts);
 
-  console.log(posts);
+  const allPosts = [...posts];
 
   const userTweetHandler = async function (text) {
     console.log(text);
@@ -46,16 +50,19 @@ function TimeLine({ userDetails }) {
         <p>No posts follow someone</p>
       ) : (
         <div>
-          {posts &&
-            posts.map((post) => (
+          {allPosts ? (
+            allPosts.map((post, i) => (
               <Posts
-                key={post.docId}
+                key={post.docId + i}
                 post={post}
                 loggedUsername={username}
                 loggedUserId={uid}
                 following={following}
               />
-            ))}
+            ))
+          ) : (
+            <p>loading</p>
+          )}
         </div>
       )}
     </div>

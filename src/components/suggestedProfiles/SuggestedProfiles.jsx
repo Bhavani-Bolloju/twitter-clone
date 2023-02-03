@@ -23,8 +23,10 @@ function SuggestedProfiles() {
 
   return (
     <div className="border  border-gray-200 p-4 w-[320px] h-full">
-      <div className="fixed bg-gray-50 p-3 z-10 rounded-xl">
-        <h3 className="text-sm my-4 text-grey-600">suggestions for you</h3>
+      <div className="fixed bg-gray-50 p-3 z-10 w-[280px] rounded-xl">
+        <h3 className="text-sm my-4 text-grey-600 w-full">
+          suggestions for you
+        </h3>
         <ul className="list-none flex flex-col gap-3">
           {toFollowList &&
             userDetails &&
