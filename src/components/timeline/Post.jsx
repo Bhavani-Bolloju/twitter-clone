@@ -51,7 +51,6 @@ function Post({
       setComments(res.comments);
       setTotalRetweets(res.retweets);
       setRetweeted(res.isRetweeted);
-      console.log(res.isBookmarked);
       setIsBookmarked(res.isBookmarked);
     };
 
@@ -111,7 +110,7 @@ function Post({
         loggedUserDocId={userDetails?.docId}
       />
       <main className="col-span-1 row-span-3 ml-[50px] ">
-        <p>{caption}</p>
+        <p className="text-gray-600">{caption}</p>
         {post_image && (
           <img
             src={post_image}

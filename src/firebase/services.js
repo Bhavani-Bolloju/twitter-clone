@@ -251,6 +251,7 @@ export const getTweetedPostsFromUser = async function (userId, following) {
   return postData;
 };
 
+//toggle post bookmark
 export const bookMarkPost = async function (isBookmarked, docId, loggedUserId) {
   const docRef = doc(db, "posts", docId);
 
@@ -264,4 +265,32 @@ export const bookMarkPost = async function (isBookmarked, docId, loggedUserId) {
           bookmark: arrayRemove(loggedUserId),
         }
   );
+};
+
+//get all posts logged user bookmarked
+
+export const getBookmarkedPosts = async function (userId) {
+  const q = query(
+    collection(db, "posts"),
+    where("bookmark", "array-contains", userId)
+  );
+
+  const docs = await getDocs(q);
+  const bookmarkedPosts = docs.docs.map((doc) => ({
+    ...doc.data(),
+    postDocId: doc.id,
+  }));
+
+  const postDetails = bookmarkedPosts.map(async (post) => {
+    const user = await getUserByUserId(post.userId);
+    return {
+      ...post,
+      username: user.username,
+      fullname: user.fullname,
+      imageSrc: user.imageSrc,
+    };
+  });
+  const data = await Promise.all(postDetails);
+
+  return data;
 };

@@ -8,11 +8,11 @@ function UserProfile({ imageSrc, fullname, username }) {
       <div>
         <Link
           to={`/${username.trim()}`}
-          className="font-semibold capitalize text-sm hover:border-b border-gray-400"
+          className="font-[500] capitalize text-sm hover:border-b border-gray-400"
         >
           {fullname}
         </Link>
-        <p className="text-gray-500 text-xs">@{username}</p>
+        <p className="text-gray-400 text-xs">@{username}</p>
       </div>
     </div>
   );
