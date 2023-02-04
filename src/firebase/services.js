@@ -158,7 +158,7 @@ export const getUserLikedPosts = async function (userId) {
 
   const likedPosts = doc.docs.map((post) => ({
     ...post.data(),
-    docId: post.id,
+    postDocId: post.id,
   }));
 
   const postDetails = likedPosts.map(async (post) => {
@@ -166,6 +166,7 @@ export const getUserLikedPosts = async function (userId) {
     return { ...user, ...post };
   });
   const data = await Promise.all(postDetails);
+  // console.log(data);
 
   return data;
 };
@@ -285,9 +286,7 @@ export const getBookmarkedPosts = async function (userId) {
     const user = await getUserByUserId(post.userId);
     return {
       ...post,
-      username: user.username,
-      fullname: user.fullname,
-      imageSrc: user.imageSrc,
+      ...user,
     };
   });
   const data = await Promise.all(postDetails);

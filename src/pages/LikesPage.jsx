@@ -20,17 +20,22 @@ function LikesPage() {
   return (
     <div>
       {likedPosts &&
-        likedPosts.map((post) => (
+        likedPosts.map((post, i) => (
           <Post
+            key={post + "_" + i}
             fullname={post.fullname}
             username={post.username}
-            post={post.post}
             imageSrc={post.imageSrc}
             caption={post.caption}
             post_image={post.postImage}
-            docId={post.docId}
             userId={post.userId}
+            postDocId={post.postDocId}
+            docId={post.docId}
             allLikes={post.likes}
+            postId={post.postId}
+            isRetweet={post.isRetweet}
+            retweetUsername={post.retweetUsername}
+            retweetFullname={post.retweetFullname}
           />
         ))}
     </div>
@@ -38,3 +43,18 @@ function LikesPage() {
 }
 
 export default LikesPage;
+
+//   fullname,
+//   username,
+//   imageSrc,
+//   caption,
+//   post_image,
+//   userId,
+//   postDocId,
+//   docId,
+//   allLikes,
+//   postId,
+//   isRetweet,
+//   retweetUsername,
+//   retweetFullname,
+//   following,

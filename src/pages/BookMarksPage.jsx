@@ -29,8 +29,27 @@ function BookMarksPage() {
       </div>
       <div className="h-[100vh]">
         {bookmarkedPosts &&
-          bookmarkedPosts.map((post) => {
-            return <Post key={post.userId} {...post} />;
+          bookmarkedPosts.map((post, i) => {
+            console.log(post);
+            return (
+              <Post
+                key={post.docID + "_" + i}
+                fullname={post.fullname}
+                username={post.username}
+                imageSrc={post.imageSrc}
+                caption={post.caption}
+                post_image={post.postImage}
+                userId={post.userId}
+                postDocId={post.postDocId}
+                docId={post.docId}
+                allLikes={post.allLikes}
+                postId={post.postId}
+                isRetweet={post.isRetweet}
+                retweetUsername={post.retweetUsername}
+                retweetFullname={post.retweetFullname}
+                following={post.following}
+              />
+            );
           })}
       </div>
     </div>
