@@ -2,7 +2,7 @@ import React from "react";
 import { RxCross2 } from "react-icons/rx";
 import UserProfile from "../timeline/UserProfile";
 import Home from "../timeline/Home";
-import { updatePostReplies } from "../../firebase/services";
+import { updatePostReplies, updateUserReplies } from "../../firebase/services";
 
 function PostReplies({
   onClose,
@@ -12,14 +12,18 @@ function PostReplies({
   spUsername,
   spUserId,
   spDocId,
+  postId,
   loggedUserId,
   imageSrc,
+  loggedUserDocId,
   loggedUserName,
   loggedUserFullName,
   onAddComment,
 }) {
   const replyCommentHandler = function (reply) {
     updatePostReplies(spDocId, loggedUserName, reply);
+    updateUserReplies(loggedUserDocId, reply, postId, spUsername);
+    console.log(loggedUserDocId, reply, postId, spUsername);
     onClose(false);
     onAddComment((prev) => (prev += 1));
   };

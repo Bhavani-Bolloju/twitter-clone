@@ -5,7 +5,7 @@ module.exports = {
     extend: {
       gridTemplateColumns: {
         home: "250px 1fr",
-        timeline: "600px 300px",
+        timeline: "580px 320px",
         "": "",
       },
     },

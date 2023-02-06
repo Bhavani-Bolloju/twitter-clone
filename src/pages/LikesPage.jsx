@@ -8,6 +8,7 @@ import { useState } from "react";
 function LikesPage() {
   const [userPathId, profileUserId] = useOutletContext();
   const [likedPosts, setLikedPosts] = useState(null);
+  // console.log(userPathId, profileUserId);
 
   useEffect(() => {
     const userLikedPosts = async function () {

@@ -6,21 +6,15 @@ import Posts from "./Posts";
 import { db } from "../../firebase/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { useId } from "react";
-import { useRetweets } from "../hooks/use-retweets";
 
 function TimeLine({ userDetails }) {
-  const { imageSrc, username, fullname, uid, following } = userDetails;
+  const { imageSrc, username, fullname, docId, uid, following } = userDetails;
 
   const id = useId();
 
   const { posts } = usePosts(getPosts, following, uid);
-  // const { retweets } = useRetweets();
-  // console.log(retweets);
-  // console.log(posts);
 
   const allPosts = [...posts];
-
-  // console.log(allPosts);
 
   const userTweetHandler = async function (text) {
     console.log(text);
@@ -57,6 +51,7 @@ function TimeLine({ userDetails }) {
               <Posts
                 key={post.docId + i}
                 post={post}
+                loggedUserDocId={docId}
                 loggedUsername={username}
                 loggedUserId={uid}
                 following={following}

@@ -17,22 +17,21 @@ import UserProfileHeader from "./UserProfileHeader";
 import PostReplies from "../comments/PostReplies";
 import { Link } from "react-router-dom";
 import * as routes from "../../constants/route-paths";
+import { FaRetweet } from "react-icons/fa";
 
 function Post({
   fullname,
   username,
   imageSrc,
+  docId,
   caption,
   post_image,
   userId,
   postDocId,
-  docId,
   allLikes,
   postId,
   isRetweet,
   retweetUsername,
-  retweetFullname,
-  following,
 }) {
   const { userDetails } = useUser();
   const [liked, setLiked] = useState(false);
@@ -87,12 +86,15 @@ function Post({
   return (
     <div className="flex flex-col gap-3 py-4 text-sm border border-gray-100 justify-center px-5 hover:cursor-pointer hover:bg-gray-50">
       {isRetweet && (
-        <div className="text-[13px] font-semibold text-gray-600">
+        <div className="text-[13px] font-semibold text-gray-600 flex gap-1">
           <Link
-            to={`/${retweetUsername.trim()}`}
-            className="font-semibold capitalize hover:border-b border-gray-400"
+            to={`/${retweetUsername}`}
+            className="font-semibold capitalize hover:border-b border-gray-400 flex items-center gap-1"
           >
-            @{retweetUsername}
+            <FaRetweet />{" "}
+            {userDetails?.username === `${retweetUsername}`
+              ? " you "
+              : ` ${retweetUsername}`}
           </Link>
           <span> Retweeted</span>
         </div>
@@ -115,7 +117,7 @@ function Post({
           <img
             src={post_image}
             alt={username}
-            className="mt-3 w-[100%] h-[280px] rounded-2xl object-cover"
+            className="mt-3 w-[100%] h-[300px] rounded-2xl object-cover"
           />
         )}
       </main>
@@ -152,17 +154,20 @@ function Post({
       </footer>
       {overlay && (
         <PostReplies
+          docId={docId}
           onClose={setOverlay}
           postImage={post_image}
           caption={caption}
           spFullname={fullname}
           spUsername={username}
           spUserId={userId}
-          spDocId={postId}
+          postId={postId}
+          spDocId={postDocId}
           imageSrc={userDetails?.imageSrc}
           loggedUserId={userDetails?.uid}
           loggedUserName={userDetails?.username}
           loggedUserFullName={userDetails?.fullname}
+          loggedUserDocId={userDetails?.docId}
           onAddComment={setComments}
         />
       )}

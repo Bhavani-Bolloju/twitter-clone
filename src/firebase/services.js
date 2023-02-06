@@ -1,5 +1,6 @@
 import { firebaseApp, db } from "./firebase";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { ref } from "firebase/storage";
 import {
   getDocs,
   query,
@@ -11,6 +12,7 @@ import {
   arrayUnion,
   arrayRemove,
   onSnapshot,
+  FieldPath,
 } from "firebase/firestore";
 import { async } from "@firebase/util";
 
@@ -71,8 +73,6 @@ export const updateProfileUserFollowersArray = async function (
   userId
 ) {
   const data = doc(db, "users", profileuserDocId);
-  console.log(isFollowing, profileuserDocId, userId);
-  console.log(data);
 
   await updateDoc(
     data,
@@ -101,8 +101,6 @@ export const updatePostUserLikesArray = async function (
   postUserDocId,
   loggeduserId
 ) {
-  console.log(isLiked, postUserDocId, loggeduserId);
-
   const data = doc(db, "posts", postUserDocId);
   await updateDoc(
     data,
@@ -133,11 +131,29 @@ export const postCount = async function (docId, userId, postId) {
 
 export const updatePostReplies = async function (spDocId, userName, reply) {
   const docRef = doc(db, "posts", spDocId);
-  console.log(docRef);
+
   await updateDoc(docRef, {
     comments: arrayUnion({
       username: userName,
       comment: reply,
+    }),
+  });
+};
+
+export const updateUserReplies = async function (
+  docId,
+  comment,
+  postId,
+  replyingTo
+) {
+  const docRef = doc(db, "users", docId);
+  console.log(docRef, "user replies doc");
+
+  await updateDoc(docRef, {
+    comments: arrayUnion({
+      comment,
+      postId,
+      replyingTo,
     }),
   });
 };
@@ -186,25 +202,22 @@ export const updateRetweetsArray = async function (tweeting, docId, userId) {
   );
 };
 
-export const getRetweetedPosts = async function (followingArr) {
-  const q = query(
-    collection(db, "posts"),
-    where("retweets", "array-contains-any", followingArr)
-  );
-  const doc = await getDocs(q);
+export const getRetweetedPosts = async function (tweetsArray) {
+  const q = query(collection(db, "posts"), where("postId", "in", tweetsArray));
+  const getPosts = await getDocs(q);
 
-  const data = doc.docs.map((post) => ({
-    ...post.data(),
-    postDocId: post.id,
-    type: "retweet",
-  }));
-  return data;
+  const postsData = getPosts.docs.map((post, i) => {
+    return {
+      ...post.data(),
+      postDocId: post.id,
+      type: "retweet",
+    };
+  });
+  return postsData;
 };
 
 export const retweetsInUsers = async function (tweeting, userDocId, postId) {
   const docRef = doc(db, "users", userDocId);
-
-  console.log(tweeting, userDocId, postId);
 
   await updateDoc(
     docRef,
@@ -221,6 +234,7 @@ export const retweetsInUsers = async function (tweeting, userDocId, postId) {
 export const getTweetedPostsFromUser = async function (userId, following) {
   const q = query(collection(db, "users"));
 
+  // console.log(userId, following);
   const profiles = await getDocs(q);
 
   const data = profiles.docs
@@ -291,5 +305,16 @@ export const getBookmarkedPosts = async function (userId) {
   });
   const data = await Promise.all(postDetails);
 
+  return data;
+};
+
+export const getUserRepliedPosts = async function (userId, repliedTo) {
+  const user = await getUserByUserId(userId);
+  const userComments = user.comments;
+  const data = userComments.map((reply) => ({
+    ...reply,
+    repliedTo,
+    ...user,
+  }));
   return data;
 };

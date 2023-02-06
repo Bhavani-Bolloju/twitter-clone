@@ -2,7 +2,13 @@ import React from "react";
 import { useEffect } from "react";
 import Post from "./Post";
 
-function Posts({ post, loggedUsername, loggedUserId, following }) {
+function Posts({
+  post,
+  loggedUsername,
+  loggedUserDocId,
+  loggedUserId,
+  following,
+}) {
   // console.log(post.postDocId, "post");
 
   return (
@@ -16,6 +22,7 @@ function Posts({ post, loggedUsername, loggedUserId, following }) {
         userId={post.userId}
         postDocId={post.postDocId}
         docId={post.docId}
+        loggedUserDocId={loggedUserDocId}
         allLikes={post.likes}
         postId={post.postId}
         isRetweet={post.type === "retweet" ? true : false}
