@@ -90,8 +90,9 @@ function Post({
   };
 
   const navigateUser = function (e) {
-    // if (e.currentTarget !== e.target) return;
-    navigate(`/postPage/${postId}`);
+    if (e.currentTarget === e.target) {
+      navigate(`/postPage/${postId}`);
+    }
   };
 
   return (
@@ -139,7 +140,7 @@ function Post({
         <div className="flex gap-2 text-gray-500 items-center">
           <FaRegComment
             onClick={userPostCommentHandler}
-            className="w-4 h-4 text-gray-500 hover:cursor-pointer"
+            className="w-6 h-6 text-gray-500 hover:cursor-pointer hover:bg-blue-200 p-1 rounded-full"
           />
           <p>{comments}</p>
         </div>

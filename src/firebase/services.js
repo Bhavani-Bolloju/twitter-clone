@@ -237,7 +237,6 @@ export const retweetsInUsers = async function (tweeting, userDocId, postId) {
 export const getTweetedPostsFromUser = async function (userId, following) {
   const q = query(collection(db, "users"));
 
-  // console.log(userId, following);
   const profiles = await getDocs(q);
 
   const data = profiles.docs
@@ -253,6 +252,7 @@ export const getTweetedPostsFromUser = async function (userId, following) {
     const getPosts = await getDocs(q);
 
     const postsData = getPosts.docs.map((post, i) => {
+      // console.log(post.data(), "post");
       return {
         ...post.data(),
         postDocId: post.id,
@@ -265,8 +265,9 @@ export const getTweetedPostsFromUser = async function (userId, following) {
   });
 
   const postData = await Promise.all(userRetweets);
+  const validPostData = postData.filter((post) => post);
 
-  return postData;
+  return validPostData;
 };
 
 //toggle post bookmark

@@ -19,6 +19,7 @@ function Home({ avatarUrl, username, fullname, onReply }) {
       <form
         className="w-[80%] flex flex-col"
         onSubmit={(e) => {
+          e.stopPropagation();
           e.preventDefault();
           onReply(textRef.current.value);
           textRef.current.value = "";

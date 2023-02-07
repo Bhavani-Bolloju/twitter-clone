@@ -31,8 +31,8 @@ function PostReplies({
 
   return (
     <div className="fixed h-[100vh] z-20 w-full top-0 left-0">
-      <div className="fixed h-full  w-full bg-black/40" />
-      <div className="fixed translate-x-[-50%] top-20 left-1/2 z-20 bg-white w-[500px] p-4 rounded-xl">
+      <div className="fixed h-full z-30  w-full bg-black/40" />
+      <div className="fixed  translate-x-[-50%] top-20 left-1/2 z-50 bg-white w-[500px] p-4 rounded-xl">
         <RxCross2
           onClick={(e) => {
             e.stopPropagation();

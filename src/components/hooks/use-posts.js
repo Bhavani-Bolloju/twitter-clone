@@ -12,6 +12,7 @@ const usePosts = function (fn, following, uid) {
     const userPost = async function () {
       const res = await fn(following, uid);
       const tweet = await getTweetedPostsFromUser(uid, following);
+      // console.log(tweet);
       const resData = tweet.flatMap((post) => post);
       let posts = [];
       if (tweet[0]) {
@@ -20,7 +21,7 @@ const usePosts = function (fn, following, uid) {
         posts = res;
       }
 
-      console.log(resData);
+      // console.log(resData);
       const postDetails = posts?.map(async (post) => {
         // console.log(post);
         const user = await getUserByUserId(post.userId);
