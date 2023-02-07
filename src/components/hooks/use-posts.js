@@ -19,7 +19,10 @@ const usePosts = function (fn, following, uid) {
       } else {
         posts = res;
       }
-      const postDetails = posts.map(async (post) => {
+
+      console.log(resData);
+      const postDetails = posts?.map(async (post) => {
+        // console.log(post);
         const user = await getUserByUserId(post.userId);
 
         return { ...user, ...post };

@@ -13,6 +13,7 @@ import NoMatch from "./pages/NoMatch";
 import TweetsPage from "./pages/TweetsPage";
 import TweetsAndReplies from "./pages/TweetsAndReplies";
 import LikesPage from "./pages/LikesPage";
+import PostViewPage from "./pages/PostViewPage";
 
 function App() {
   const { user } = useAuth();
@@ -27,6 +28,7 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path={routes.bookMark} element={<BookMarksPage />} />
           <Route path={routes.home} element={<HomePage />} />
+          <Route path="/postPage/:id" element={<PostViewPage />} />
           <Route path={`/:id`} element={<ProfilePage />}>
             <Route index element={<TweetsPage />} />
             <Route path={`/:id/${routes.tweets}`} element={<TweetsPage />} />

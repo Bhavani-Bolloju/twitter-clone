@@ -3,6 +3,7 @@ import { RxCross2 } from "react-icons/rx";
 import UserProfile from "../timeline/UserProfile";
 import Home from "../timeline/Home";
 import { updatePostReplies, updateUserReplies } from "../../firebase/services";
+import { useId } from "react";
 
 function PostReplies({
   onClose,
@@ -20,10 +21,10 @@ function PostReplies({
   loggedUserFullName,
   onAddComment,
 }) {
+  const id = useId();
   const replyCommentHandler = function (reply) {
-    updatePostReplies(spDocId, loggedUserName, reply);
-    updateUserReplies(loggedUserDocId, reply, postId, spUsername);
-    console.log(loggedUserDocId, reply, postId, spUsername);
+    updatePostReplies(spDocId, loggedUserName, reply, id);
+    updateUserReplies(loggedUserDocId, reply, postId, spUsername, id);
     onClose(false);
     onAddComment((prev) => (prev += 1));
   };
@@ -32,7 +33,13 @@ function PostReplies({
     <div className="fixed h-[100vh] z-20 w-full top-0 left-0">
       <div className="fixed h-full  w-full bg-black/40" />
       <div className="fixed translate-x-[-50%] top-20 left-1/2 z-20 bg-white w-[500px] p-4 rounded-xl">
-        <RxCross2 onClick={() => onClose(false)} className="cursor-pointer" />
+        <RxCross2
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose(false);
+          }}
+          className="cursor-pointer"
+        />
         <div className="flex flex-col gap-6 mt-3 pl-5 pt-4">
           <div>
             <UserProfile

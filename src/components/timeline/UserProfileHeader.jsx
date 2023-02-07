@@ -19,10 +19,10 @@ function UserProfileHeader({
 }) {
   const [isFollowing, setIsfollowing] = useState(null);
   const [openbox, setOpenbox] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
   const ref = useRef();
 
-  const postOptionsHandler = function () {
+  const postOptionsHandler = function (e) {
+    e.stopPropagation();
     setOpenbox((prev) => !prev);
   };
 
@@ -43,7 +43,8 @@ function UserProfileHeader({
     }
   }, [following, userId]);
 
-  const toggleFollowerHandler = function () {
+  const toggleFollowerHandler = function (e) {
+    // e.stopPropagation();
     setIsfollowing((prev) => !prev);
     toggleFollower(isFollowing, spDocId, loggedUserId, loggedUserDocId, userId);
   };
@@ -67,7 +68,10 @@ function UserProfileHeader({
           <div className="absolute right-3 text-xs font-semibold flex flex-col gap-2   w-[250px] top-6 bg-white shadow-lg p-3 rounded-lg">
             {loggedUserId !== userId && (
               <button
-                onClick={toggleFollowerHandler}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleFollowerHandler();
+                }}
                 className="flex items-center gap-1 hover:text-blue-500"
               >
                 {isFollowing ? (
@@ -86,7 +90,10 @@ function UserProfileHeader({
             )}
 
             <button
-              onClick={onBookmark}
+              onClick={(e) => {
+                e.stopPropagation();
+                onBookmark();
+              }}
               className="flex items-center gap-1 hover:text-blue-500"
             >
               <BiBookmarks />

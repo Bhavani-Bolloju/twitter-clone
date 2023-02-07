@@ -28,7 +28,7 @@ function Posts({
         isRetweet={post.type === "retweet" ? true : false}
         retweetUsername={post.tweetedUsername || ""}
         retweetFullname={post.tweetedFullname || ""}
-        following={following}
+        // following={following}
       />
     </div>
   );

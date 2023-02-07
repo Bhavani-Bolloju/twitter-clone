@@ -129,13 +129,14 @@ export const postCount = async function (docId, userId, postId) {
   };
 };
 
-export const updatePostReplies = async function (spDocId, userName, reply) {
+export const updatePostReplies = async function (spDocId, userName, reply, id) {
   const docRef = doc(db, "posts", spDocId);
 
   await updateDoc(docRef, {
     comments: arrayUnion({
       username: userName,
       comment: reply,
+      id: id,
     }),
   });
 };
@@ -144,7 +145,8 @@ export const updateUserReplies = async function (
   docId,
   comment,
   postId,
-  replyingTo
+  replyingTo,
+  id
 ) {
   const docRef = doc(db, "users", docId);
   console.log(docRef, "user replies doc");
@@ -154,6 +156,7 @@ export const updateUserReplies = async function (
       comment,
       postId,
       replyingTo,
+      id,
     }),
   });
 };
@@ -310,6 +313,7 @@ export const getBookmarkedPosts = async function (userId) {
 
 export const getUserRepliedPosts = async function (userId, repliedTo) {
   const user = await getUserByUserId(userId);
+  console.log(user);
   const userComments = user.comments;
   const data = userComments.map((reply) => ({
     ...reply,
@@ -317,4 +321,13 @@ export const getUserRepliedPosts = async function (userId, repliedTo) {
     ...user,
   }));
   return data;
+};
+
+export const getUserPostByPostId = async function (postId) {
+  const q = query(collection(db, "posts"), where("postId", "==", postId));
+  const docs = await getDocs(q);
+  const doc = docs.docs;
+  // console.log(doc[0].data());
+  // console.log(doc[0].data());
+  return { ...doc[0].data(), postDocId: doc[0].id };
 };

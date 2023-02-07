@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { AiOutlineComment, AiOutlineRetweet } from "react-icons/ai";
 import { HiOutlineHeart } from "react-icons/hi";
 import { FaRegComment } from "react-icons/fa";
@@ -15,7 +15,7 @@ import {
 import UserProfileHeader from "./UserProfileHeader";
 
 import PostReplies from "../comments/PostReplies";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as routes from "../../constants/route-paths";
 import { FaRetweet } from "react-icons/fa";
 
@@ -42,6 +42,8 @@ function Post({
   const [retweeted, setRetweeted] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const getPostLikes = async function () {
       const res = await postCount(postDocId, userDetails?.uid, postId);
@@ -58,7 +60,8 @@ function Post({
     }
   }, [userDetails?.uid]);
 
-  const userPostLikeHandler = function () {
+  const userPostLikeHandler = function (e) {
+    e.stopPropagation();
     updatePostUserLikesArray(liked, postDocId, userDetails.uid);
     setLiked((prev) => !prev);
 
@@ -66,25 +69,36 @@ function Post({
       return !liked ? (count += 1) : (count -= 1);
     });
   };
-  const userPostCommentHandler = function () {
+  const userPostCommentHandler = function (e) {
+    e.stopPropagation();
     setOverlay(true);
   };
 
-  const retweetHandler = async function () {
+  const retweetHandler = async function (e) {
+    e.stopPropagation();
     updateRetweetsArray(retweeted, postDocId, userDetails?.uid);
     retweetsInUsers(retweeted, userDetails?.docId, postId);
     setRetweeted((rt) => !rt);
     setTotalRetweets((trt) => (!retweeted ? (trt += 1) : (trt -= 1)));
   };
 
-  const bookmarkHandler = function () {
+  const bookmarkHandler = function (e) {
+    // e.stopPropagation();
     setIsBookmarked((prev) => !prev);
-    console.log(isBookmarked, postDocId, userDetails?.uid);
+    // console.log(isBookmarked, postDocId, userDetails?.uid);
     bookMarkPost(isBookmarked, postDocId, userDetails?.uid);
   };
 
+  const navigateUser = function (e) {
+    // if (e.currentTarget !== e.target) return;
+    navigate(`/postPage/${postId}`);
+  };
+
   return (
-    <div className="flex flex-col gap-3 py-4 text-sm border border-gray-100 justify-center px-5 hover:cursor-pointer hover:bg-gray-50">
+    <div
+      onClick={navigateUser}
+      className="flex flex-col gap-3 py-4 text-sm border border-gray-100 justify-center px-5 hover:bg-gray-50"
+    >
       {isRetweet && (
         <div className="text-[13px] font-semibold text-gray-600 flex gap-1">
           <Link
