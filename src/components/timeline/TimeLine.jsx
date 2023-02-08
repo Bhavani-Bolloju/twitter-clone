@@ -33,7 +33,7 @@ function TimeLine({ userDetails }) {
   };
 
   return (
-    <div className=" border w-[100%] border-gray-200">
+    <div className=" border w-[100%] border-gray-1  00">
       <div className="p-2">
         <Home
           avatarUrl={imageSrc}

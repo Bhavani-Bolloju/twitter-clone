@@ -9,13 +9,12 @@ import { Outlet } from "react-router-dom";
 function DashBoardPage() {
   const { userDetails } = useUser();
   return (
-    <div className="relative grid grid-cols-home gap-4">
+    <div className="flex justify-center border-gray-400  max-w-[1200px] m-auto">
       <Sidebar />
-
-      <div className="col-start-2 col-end-3 grid grid-cols-timeline relative gap-5">
+      <div className="flex-grow max-w-[580px]">
         <Outlet />
-        <SuggestedProfiles />
       </div>
+      <SuggestedProfiles />
     </div>
   );
 }

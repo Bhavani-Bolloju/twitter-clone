@@ -30,7 +30,6 @@ function BookMarksPage() {
       <div className="h-[100vh]">
         {bookmarkedPosts &&
           bookmarkedPosts.map((post, i) => {
-            console.log(post);
             return (
               <Post
                 key={post.docID + "_" + i}

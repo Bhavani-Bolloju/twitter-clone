@@ -22,8 +22,8 @@ function SuggestedProfiles() {
   }, [userDetails]);
 
   return (
-    <div className="border  border-gray-200 p-4 w-[330px] h-full">
-      <div className="fixed bg-gray-50 p-3 z-10 w-[300px] rounded-xl">
+    <div className="relative max-lg:hidden w-[300px]">
+      <div className="fixed h-full suggested-div  bg-gray-50 p-3 z-10 border">
         <h3 className="text-sm my-4 text-grey-600 w-full">
           suggestions for you
         </h3>

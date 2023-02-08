@@ -3,16 +3,31 @@
 @tailwind utilities;
 
 *,
-*::before,
-*::after {
+*::after,
+*::before {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  width: 80%;
-  margin: auto;
-  background-color: #fff;
   font-family: "Roboto", sans-serif;
+}
+
+.suggested-div {
+  position: fixed;
+  width: inherit;
+  max-width: inherit;
+}
+
+.nav-div {
+  /* background-color: yellow; */
+  position: fixed;
+  width: inherit;
+  max-width: inherit;
+  height: 100%;
+}
+.header-div {
+  height: inherit;
+  width: inherit;
 }

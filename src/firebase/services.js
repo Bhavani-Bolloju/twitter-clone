@@ -314,7 +314,6 @@ export const getBookmarkedPosts = async function (userId) {
 
 export const getUserRepliedPosts = async function (userId, repliedTo) {
   const user = await getUserByUserId(userId);
-  console.log(user);
   const userComments = user.comments;
   const data = userComments.map((reply) => ({
     ...reply,
