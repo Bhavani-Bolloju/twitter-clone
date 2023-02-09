@@ -10,7 +10,7 @@ function HomePage() {
   return (
     <>
       {userDetails && (
-        <div className="flex-grow max-w-[550px]">
+        <div className="flex-grow max-w-[550px] ">
           <HeaderWrapper>Home</HeaderWrapper>
           <TimeLine userDetails={userDetails} />
         </div>

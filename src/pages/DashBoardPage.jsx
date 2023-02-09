@@ -9,9 +9,9 @@ import { Outlet } from "react-router-dom";
 function DashBoardPage() {
   const { userDetails } = useUser();
   return (
-    <div className="flex justify-center border-gray-400  max-w-[1200px] m-auto">
+    <div className="flex justify-center items-center max-sm:w-[100%]  border-gray-400  max-w-[1200px] m-auto">
       <Sidebar />
-      <div className="flex-grow max-w-[580px]">
+      <div className="flex-grow min-w-[400px] max-w-[50%]">
         <Outlet />
       </div>
       <SuggestedProfiles />

@@ -90,6 +90,7 @@ function Post({
   };
 
   const navigateUser = function (e) {
+    // console.log(e.currentTarget, e.target);
     if (e.currentTarget === e.target) {
       navigate(`/postPage/${postId}`);
     }
